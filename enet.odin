@@ -20,15 +20,15 @@ Socket_Wait :: enum i32 {
 }
 
 Socket_Option :: enum i32 {
-	NONBLOCK  = 1,
-	BROADCAST = 2,
-	RCVBUF    = 3,
-	SNDBUF    = 4,
-	REUSEADDR = 5,
-	RCVTIMEO  = 6,
-	SNDTIMEO  = 7,
-	ERROR     = 8,
-	NODELAY   = 9,
+	Non_Blocking    = 1,
+	Broadcast       = 2,
+	Receive_Buffer  = 3,
+	Send_Buffer     = 4,
+	Reuse_Address   = 5,
+	Receive_Timeout = 6,
+	Send_Timeout    = 7,
+	Error           = 8,
+	No_Delay        = 9,
 }
 
 Socket_Shutdown :: enum i32 {
