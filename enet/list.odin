@@ -1,10 +1,10 @@
-ListNode :: struct #ordered {
-	next: ^ListNode,
-	previous: ^ListNode,
+List_Node :: struct #ordered {
+	next: ^List_Node,
+	previous: ^List_Node,
 }
 
-ListIterator :: ^ListNode;
+ListIterator :: ^List_Node;
 
 List :: struct #ordered {
-	sentinel: ListNode,
+	sentinel: List_Node,
 }

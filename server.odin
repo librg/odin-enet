@@ -22,7 +22,7 @@ main :: proc() {
 
 	loop: for true {
 		for host_service(server, &event, 1000) > 0 {
-			if event.event_type == EventType.Connect {
+			if event.event_type == Event_Type.Connect {
 				//fmt.printf("User has been connected from %x\n", event.peer->address.host);
 				fmt.println("Incoming connection!");
 				peer_disconnect(event.peer, 0xBADF00D);

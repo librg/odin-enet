@@ -7,19 +7,19 @@ when ODIN_OS == "windows" {
 using import "enet/list.odin";
 using import "enet/protocol.odin";
 
-SocketType :: enum i32 {
+Socket_Type :: enum i32 {
 	Stream   = 1,
 	Datagram = 2,
 }
 
-SocketWait :: enum i32 {
+Socket_Wait :: enum i32 {
 	None      = 0,
 	Send      = (1 << 0),
 	Receive   = (1 << 1),
 	Interrupt = (1 << 2),
 }
 
-SocketOption :: enum i32 {
+Socket_Option :: enum i32 {
 	NONBLOCK  = 1,
 	BROADCAST = 2,
 	RCVBUF    = 3,
@@ -31,21 +31,21 @@ SocketOption :: enum i32 {
 	NODELAY   = 9,
 }
 
-SocketShutdown :: enum i32 {
+Socket_Shutdown :: enum i32 {
 	Read      = 0,
 	Write     = 1,
 	ReadWrite = 2,
 }
 
-PacketFlag :: enum i32 {
-	Reliable           = (1 << 0),
-	Unsequenced        = (1 << 1),
-	NoAllocate         = (1 << 2),
-	UnreliableFragment = (1 << 3),
-	Sent               = (1 << 8),
+Packet_Flag :: enum i32 {
+	Reliable            = (1 << 0),
+	Unsequenced         = (1 << 1),
+	No_Allocate         = (1 << 2),
+	Unreliable_Fragment = (1 << 3),
+	Sent                = (1 << 8),
 }
 
-PeerState :: enum i32 {
+Peer_State :: enum i32 {
 	Disconnected             = 0,
 	Connecting               = 1,
 	Acknowledging_Connect    = 2,
@@ -58,7 +58,7 @@ PeerState :: enum i32 {
 	Zombie                   = 9,
 }
 
-EventType :: enum i32 {
+Event_Type :: enum i32 {
 	None       = 0,
 	Connect    = 1,
 	Disconnect = 2,
@@ -74,18 +74,18 @@ Packet :: struct #ordered {
 	flags: u32,
 	data: ^u8,
 	data_len: u32,
-	free_cb: PacketFreeCallback,
+	free_cb: Packet_Free_Callback,
 	user_data: rawptr,
 }
 
 Acknowledgement :: struct #ordered {
-	acknowledgement_list: ListNode,
+	acknowledgement_list: List_Node,
 	sent_time: u32,
 	command: Protocol,
 }
 
-OutgoingCommand :: struct #ordered {
-	outgoing_command_list: ListNode,
+Outgoing_Command :: struct #ordered {
+	outgoing_command_list: List_Node,
 	reliable_sequence_number: u16,
 	unreliable_sequence_number: u16,
 	sent_time: u32,
@@ -98,8 +98,8 @@ OutgoingCommand :: struct #ordered {
 	packet: ^Packet,
 }
 
-IncomingCommand :: struct #ordered {
-	incoming_command_list: ListNode,
+Incoming_Command :: struct #ordered {
+	incoming_command_list: List_Node,
 	reliable_sequence_number: u16,
 	unreliable_sequence_number: u16,
 	command: Protocol,
@@ -110,18 +110,18 @@ IncomingCommand :: struct #ordered {
 }
 
 Channel :: struct #ordered {
-	outgoingReliableSequenceNumber: u16,
-	outgoingUnreliableSequenceNumber: u16,
-	usedReliableWindows: u16,
-	reliableWindows: [PEER_RELIABLE_WINDOWS]u16,
-	incomingReliableSequenceNumber: u16,
-	incomingUnreliableSequenceNumber: u16,
-	incomingReliableCommands: List,
-	incomingUnreliableCommands: List,
+	outgoing_reliable_sequence_number: u16,
+	outgoing_unreliable_sequence_number: u16,
+	used_reliable_windows: u16,
+	reliable_windows: [PEER_RELIABLE_WINDOWS]u16,
+	incoming_reliable_sequence_number: u16,
+	incoming_unreliable_sequence_number: u16,
+	incoming_reliable_commands: List,
+	incoming_unreliable_commands: List,
 }
 
 Peer :: struct #ordered {
-	dispatch_list: ListNode,
+	dispatch_list: List_Node,
 	host: ^Host,
 	outgoing_peer_id: u16,
 	incoming_peer_id: u16,
@@ -130,7 +130,7 @@ Peer :: struct #ordered {
 	incoming_session_id: u8 ,
 	address: Address,
 	data: rawptr,
-	state: PeerState,
+	state: Peer_State,
 	channels: Channel,
 	channel_count: u32,
 	incoming_bandwidth: u32,
@@ -198,44 +198,44 @@ Compressor :: struct #ordered {
 Host :: struct #ordered {
 	socket: Socket,
 	address: Address,
-	incomingBandwidth: u32,
-	outgoingBandwidth: u32,
-	bandwidthThrottleEpoch: u32,
+	incoming_bandwidth: u32,
+	outgoing_bandwidth: u32,
+	bandwidth_throttle_epoch: u32,
 	mtu: u32,
-	randomSeed: u32,
-	recalculateBandwidthLimits: i32,
+	random_seed: u32,
+	recalculate_bandwidth_limits: i32,
 	peers: ^Peer,
-	peerCount: u32,
-	channelLimit: u32,
-	serviceTime: u32,
-	dispatchQueue: List,
-	continueSending: i32,
-	packetSize: u32,
-	headerFlags: u16,
+	peer_count: u32,
+	channel_limit: u32,
+	service_time: u32,
+	dispatch_queue: List,
+	continue_sending: i32,
+	packet_size: u32,
+	header_flags: u16,
 	commands: [PROTOCOL_MAXIMUM_PACKET_COMMANDS]Protocol,
-	commandCount: u32,
+	command_count: u32,
 	buffers: [BUFFER_MAXIMUM]Buffer,
-	bufferCount: u32,
-	checksum: ChecksumCallback,
+	buffer_count: u32,
+	checksum: Checksum_Callback,
 	compressor: Compressor,
-	packetData: [2*PROTOCOL_MAXIMUM_MTU]u8,
-	receivedAddress: Address,
-	receivedData: u8,
-	receivedDataLength: u32,
-	totalSentData: u32,
-	totalSentPackets: u32,
-	totalReceivedData: u32,
-	totalReceivedPackets: u32,
-	intercept: InterceptCallback,
-	connectedPeers: u32,
-	bandwidthLimitedPeers: u32,
-	duplicatePeers: u32,
-	maximumPacketSize: u32,
-	maximumWaitingData: u32,
+	packet_data: [2*PROTOCOL_MAXIMUM_MTU]u8,
+	received_address: Address,
+	received_data: u8,
+	received_data_length: u32,
+	total_sent_data: u32,
+	total_sent_packets: u32,
+	total_received_data: u32,
+	total_received_packets: u32,
+	intercept: Intercept_Callback,
+	connected_peers: u32,
+	bandwidth_limited_peers: u32,
+	duplicate_peers: u32,
+	maximum_packet_size: u32,
+	maximum_waiting_data: u32,
 }
 
 Event :: struct #ordered {
-	event_type: EventType,
+	event_type: Event_Type,
 	peer: ^Peer,
 	channel_id: u8,
 	data: u32,
@@ -257,7 +257,7 @@ foreign enet32 {
 	time_get                       :: proc() -> u64                                                                                                           #link_name "enet_time_get" ---;
 	time_set                       :: proc(time: u64)                                                                                                         #link_name "enet_time_set" ---;
 
-	socket_create                  :: proc(sock_type: SocketType) -> Socket                                                                                   #link_name "enet_socket_create" ---;
+	socket_create                  :: proc(sock_type: Socket_Type) -> Socket                                                                                   #link_name "enet_socket_create" ---;
 	socket_bind                    :: proc(socket: Socket, address: ^Address) -> int                                                                          #link_name "enet_socket_bind" ---;
 	socket_get_address             :: proc(socket: Socket, address: ^Address) -> int                                                                          #link_name "enet_socket_get_address" ---;
 	socket_listen                  :: proc(socket: Socket, arg1: int) -> int                                                                                  #link_name "enet_socket_listen" ---;
@@ -266,11 +266,11 @@ foreign enet32 {
 	socket_send                    :: proc(socket: Socket, address: ^Address, buffer: ^Buffer, buffer_count: u32) -> int                                      #link_name "enet_socket_send" ---;
 	socket_receive                 :: proc(socket: Socket, address: ^Address, buffer: ^Buffer, buffer_count: u32) -> int                                      #link_name "enet_socket_receive" ---;
 	socket_wait                    :: proc(socket: Socket, arg1: ^u32, arg2: u64) -> int                                                                      #link_name "enet_socket_wait" ---;
-	socket_set_option              :: proc(socket: Socket, option: SocketOption, arg2: int) -> int                                                            #link_name "enet_socket_set_option" ---;
-	socket_get_option              :: proc(socket: Socket, option: SocketOption, arg2: int) -> int                                                            #link_name "enet_socket_get_option" ---;
-	socket_shutdown                :: proc(socket: Socket, shutdown: SocketShutdown) -> int                                                                   #link_name "enet_socket_shutdown" ---;
+	socket_set_option              :: proc(socket: Socket, option: Socket_Option, arg2: int) -> int                                                           #link_name "enet_socket_set_option" ---;
+	socket_get_option              :: proc(socket: Socket, option: Socket_Option, arg2: int) -> int                                                           #link_name "enet_socket_get_option" ---;
+	socket_shutdown                :: proc(socket: Socket, shutdown: Socket_Shutdown) -> int                                                                  #link_name "enet_socket_shutdown" ---;
 	socket_destroy                 :: proc(socket: Socket)                                                                                                    #link_name "enet_socket_destroy" ---;
-	socketset_select               :: proc(socket: Socket, sock_set: ^SocketSet, sock_set2: ^SocketSet, arg3: u32) -> int                                     #link_name "enet_socketset_select" ---;
+	socketset_select               :: proc(socket: Socket, sock_set: ^Socket_Set, sock_set2: ^Socket_Set, arg3: u32) -> int                                   #link_name "enet_socketset_select" ---;
 
 	address_set_host_ip            :: proc(address: ^Address, host_name: ^u8) -> i32                                                                          #link_name "enet_address_set_host_ip" ---;
 	address_set_host               :: proc(address: ^Address, host_name: ^u8) -> i32                                                                          #link_name "enet_address_set_host" ---;
@@ -306,9 +306,9 @@ foreign enet32 {
 	peer_throttle_configure        :: proc(peer: ^Peer, interval: u32, acceleration: u32, deceleration: u32)                                                  #link_name "enet_peer_throttle_configure" ---;
 }
 
-PacketFreeCallback :: #type proc(packet: ^Packet) #cc_c;
-ChecksumCallback :: #type proc(buffers: ^Buffer, buffer_count: u32) -> u32 #cc_c;
-InterceptCallback :: #type proc(host: ^Host, event: ^Event) -> i32 #cc_c;
+Packet_Free_Callback :: #type proc(packet: ^Packet) #cc_c;
+Checksum_Callback :: #type proc(buffers: ^Buffer, buffer_count: u32) -> u32 #cc_c;
+Intercept_Callback :: #type proc(host: ^Host, event: ^Event) -> i32 #cc_c;
 
 HOST_ANY :: 0;
 HOST_BROADCAST :: 0xffffffff;
@@ -352,7 +352,7 @@ when ODIN_OS == "windows" {
 		fd_array: [FD_SETSIZE]Socket,
 	}
 
-	SocketSet :: fd_set;
+	Socket_Set :: fd_set;
 }
 else {
 	Socket :: int;

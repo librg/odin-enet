@@ -1,21 +1,21 @@
-ProtocolHeader :: struct #packed {
+Protocol_Header :: struct #packed {
 	peer_id, sent_time: u16,
 }
 
-ProtocolCommandHeader :: struct #packed {
+Protocol_Command_Header :: struct #packed {
 	command: u8,
 	channel_id: u8,
 	reliable_seq_number: u16,
 }
 
-ProtocolAcknowledge :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Acknowledge :: struct #packed {
+	header: Protocol_Command_Header,
 	recv_reliable_seq_number: u16,
 	recv_sent_time: u16,
 }
 
-ProtocolConnect :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Connect :: struct #packed {
+	header: Protocol_Command_Header,
 	outgoing_peer_id: u16,
 	incoming_session_id: u8,
 	outgoing_session_id: u8,
@@ -31,8 +31,8 @@ ProtocolConnect :: struct #packed {
 	data: u32,
 }
 
-ProtocolVerifyConnect :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Verify_Connect :: struct #packed {
+	header: Protocol_Command_Header,
 	outgoing_peer_id: u16,
 	incoming_session_id: u8,
 	outgoing_session_id: u8,
@@ -47,47 +47,47 @@ ProtocolVerifyConnect :: struct #packed {
 	connect_id: u32,
 }
 
-ProtocolBandwidthLimit :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Bandwidth_Limit :: struct #packed {
+	header: Protocol_Command_Header,
 	incoming_bandwidth: u32,
 	outgoing_bandwidth: u32,
 }
 
-ProtocolThrottleConfigure :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Throttle_Configure :: struct #packed {
+	header: Protocol_Command_Header,
 	packet_throttle_interval: u32,
 	packet_throttle_acceleration: u32,
 	packet_throttle_deceleration: u32,
 }
 
-ProtocolDisconnect :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Disconnect :: struct #packed {
+	header: Protocol_Command_Header,
 	data: u32,
 }
 
-ProtocolPing :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Ping :: struct #packed {
+	header: Protocol_Command_Header,
 }
 
-ProtocolSendReliable :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Send_Reliable :: struct #packed {
+	header: Protocol_Command_Header,
 	data_length: u16,
 }
 
-ProtocolSendUnreliable :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Send_Unreliable :: struct #packed {
+	header: Protocol_Command_Header,
 	unreliable_sequence_number: u16,
 	data_length: u16,
 }
 
-ProtocolSendUnsequenced :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Send_Unsequenced :: struct #packed {
+	header: Protocol_Command_Header,
 	unsequenced_group: u16,
 	data_length: u16,
 }
 
-ProtocolSendFragment :: struct #packed {
-	header: ProtocolCommandHeader,
+Protocol_Send_Fragment :: struct #packed {
+	header: Protocol_Command_Header,
 	data_length: u16,
 	fragment_count: u32,
 	fragment_number: u32,
@@ -96,18 +96,18 @@ ProtocolSendFragment :: struct #packed {
 }
 
 Protocol :: struct #packed {
-	header: ProtocolCommandHeader,
-	acknowledge: ProtocolAcknowledge,
-	connect: ProtocolConnect,
-	verify_connect: ProtocolVerifyConnect,
-	disconnect: ProtocolDisconnect,
-	ping: ProtocolPing,
-	send_reliable: ProtocolSendReliable,
-	send_unreliable: ProtocolSendUnreliable,
-	send_unsequenced: ProtocolSendUnsequenced,
-	send_fragment: ProtocolSendFragment,
-	bandwidth_limit: ProtocolBandwidthLimit,
-	throttle_configure: ProtocolThrottleConfigure,
+	header: Protocol_Command_Header,
+	acknowledge: Protocol_Acknowledge,
+	connect: Protocol_Connect,
+	verify_connect: Protocol_Verify_Connect,
+	disconnect: Protocol_Disconnect,
+	ping: Protocol_Ping,
+	send_reliable: Protocol_Send_Reliable,
+	send_unreliable: Protocol_Send_Unreliable,
+	send_unsequenced: Protocol_Send_Unsequenced,
+	send_fragment: Protocol_Send_Fragment,
+	bandwidth_limit: Protocol_Bandwidth_Limit,
+	throttle_configure: Protocol_Throttle_Configure,
 }
 
 PROTOCOL_MINIMUM_MTU             :: 576;

@@ -32,7 +32,7 @@ main :: proc() {
 
 	fmt.println("Establishing connection!");
 
-	if host_service(client, &event, 5000) > 0 && event.event_type == EventType.Connect {
+	if host_service(client, &event, 5000) > 0 && event.event_type == Event_Type.Connect {
 		fmt.println("It works!");
 	}
 	else {
