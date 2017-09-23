@@ -25,6 +25,8 @@ main :: proc() {
 	fmt.println("Host IP set!");
 
 	peer = host_connect(client, &address, 0, 0);
+	defer host_destroy(client);
+	defer peer_reset(peer);
 
 	if peer == nil {
 		fmt.println("Yuk!");
@@ -32,11 +34,15 @@ main :: proc() {
 
 	fmt.println("Establishing connection!");
 
-	if host_service(client, &event, 5000) > 0 && event.event_type == Event_Type.Connect {
+	if host_service(client, &event, 1000) > 0 && event.event_type == Event_Type.Connect {
 		fmt.println("It works!");
+		data := []u32 {1, 2, 3};
+		fmt.println(data);
+		packet := packet_create(&data[0], size_of(u32)*3, Packet_Flag.Reliable);
+		peer_send(peer, 0, packet);
+		host_flush(client);
 	}
 	else {
 		fmt.println("Nay!");
-		peer_reset(peer);
 	}
 }
