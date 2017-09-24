@@ -17,9 +17,8 @@ main :: proc() {
 	}
 
 	host_name := "127.0.0.1\x00";
-	c_host_name := &host_name[0];
 
-	address_set_host_ip(&address, c_host_name);
+	address_set_host_ip(&address, &host_name[0]);
 	address.port = 27010;
 
 	fmt.println("Host IP set!");
