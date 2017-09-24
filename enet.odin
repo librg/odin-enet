@@ -7,6 +7,66 @@ when ODIN_OS == "windows" {
 using import "enet/list.odin";
 using import "enet/protocol.odin";
 
+
+foreign enet32 {
+	initialize                     :: proc() -> i32                                                                                                           #link_name "enet_initialize" ---;
+	initialize_with_callbacks      :: proc(version: u32, inits: ^Callbacks)                                                                                   #link_name "enet_initialize_with_callbacks" ---;
+	deinitialize                   :: proc()                                                                                                                  #link_name "enet_deinitialize" ---;
+	linked_version                 :: proc() -> u32                                                                                                           #link_name "enet_linked_version" ---;
+
+	time_get                       :: proc() -> u64                                                                                                           #link_name "enet_time_get" ---;
+	time_set                       :: proc(time: u64)                                                                                                         #link_name "enet_time_set" ---;
+
+	socket_create                  :: proc(sock_type: Socket_Type) -> Socket                                                                                   #link_name "enet_socket_create" ---;
+	socket_bind                    :: proc(socket: Socket, address: ^Address) -> int                                                                          #link_name "enet_socket_bind" ---;
+	socket_get_address             :: proc(socket: Socket, address: ^Address) -> int                                                                          #link_name "enet_socket_get_address" ---;
+	socket_listen                  :: proc(socket: Socket, arg1: int) -> int                                                                                  #link_name "enet_socket_listen" ---;
+	socket_accept                  :: proc(socket: Socket, address: ^Address) -> Socket                                                                       #link_name "enet_socket_accept" ---;
+	socket_connect                 :: proc(socket: Socket, address: ^Address) -> int                                                                          #link_name "enet_socket_connect" ---;
+	socket_send                    :: proc(socket: Socket, address: ^Address, buffer: ^Buffer, buffer_count: uint) -> int                                      #link_name "enet_socket_send" ---;
+	socket_receive                 :: proc(socket: Socket, address: ^Address, buffer: ^Buffer, buffer_count: uint) -> int                                      #link_name "enet_socket_receive" ---;
+	socket_wait                    :: proc(socket: Socket, arg1: ^u32, arg2: u64) -> int                                                                      #link_name "enet_socket_wait" ---;
+	socket_set_option              :: proc(socket: Socket, option: Socket_Option, arg2: int) -> int                                                           #link_name "enet_socket_set_option" ---;
+	socket_get_option              :: proc(socket: Socket, option: Socket_Option, arg2: int) -> int                                                           #link_name "enet_socket_get_option" ---;
+	socket_shutdown                :: proc(socket: Socket, shutdown: Socket_Shutdown) -> int                                                                  #link_name "enet_socket_shutdown" ---;
+	socket_destroy                 :: proc(socket: Socket)                                                                                                    #link_name "enet_socket_destroy" ---;
+	socketset_select               :: proc(socket: Socket, sock_set: ^Socket_Set, sock_set2: ^Socket_Set, arg3: u32) -> int                                   #link_name "enet_socketset_select" ---;
+
+	address_set_host_ip            :: proc(address: ^Address, host_name: ^u8) -> i32                                                                          #link_name "enet_address_set_host_ip" ---;
+	address_set_host               :: proc(address: ^Address, host_name: ^u8) -> i32                                                                          #link_name "enet_address_set_host" ---;
+	address_get_host_ip            :: proc(address: ^Address, host_name: ^u8, name_length: uint) -> i32                                                        #link_name "enet_address_get_host_ip" ---;
+	address_get_host               :: proc(address: ^Address, host_name: ^u8, name_length: uint) -> i32                                                        #link_name "enet_address_get_host" ---;
+
+	packet_create                  :: proc(data: rawptr, data_length: uint, flags: Packet_Flag) -> ^Packet                                                     #link_name "enet_packet_create" ---;
+	packet_destroy                 :: proc(packet: ^Packet)                                                                                                   #link_name "enet_packet_destroy" ---;
+	packet_resize                  :: proc(packet: ^Packet, data_length: uint) -> int                                                                          #link_name "enet_packet_resize" ---;
+	crc32                          :: proc(buffer: ^Buffer, buffer_count: uint) -> u32                                                                         #link_name "enet_crc32" ---;
+
+	host_create                    :: proc(address: ^Address, max_conn: uint, max_chan: uint, expected_in_bandwidth: u32, expected_out_bandwidth: u32) -> ^Host #link_name "enet_host_create" ---;
+	host_destroy                   :: proc(host: ^Host)                                                                                                       #link_name "enet_host_destroy" ---;
+	host_connect                   :: proc(host: ^Host, address: ^Address, chan_count: uint, data: u32) -> ^Peer                                               #link_name "enet_host_connect" ---;
+	host_check_events              :: proc(host: ^Host, event: ^Event) -> int                                                                                 #link_name "enet_host_check_events" ---;
+	host_service                   :: proc(host: ^Host, event: ^Event, timeout: u32) -> int                                                                   #link_name "enet_host_service" ---;
+	host_flush                     :: proc(host: ^Host)                                                                                                       #link_name "enet_host_flush" ---;
+	host_broadcast                 :: proc(host: ^Host, chan_id: u8, packet: ^Packet)                                                                         #link_name "enet_host_broadcast" ---;
+	host_compress                  :: proc(host: ^Host, compressor: ^Compressor)                                                                              #link_name "enet_host_compress" ---;
+	host_compress_with_range_coder :: proc(host: ^Host) -> int                                                                                                #link_name "enet_host_compress_with_range_coder" ---;
+	host_channel_limit             :: proc(host: ^Host, chan_limit: uint)                                                                                      #link_name "enet_host_channel_limit" ---;
+	host_bandwidth_limit           :: proc(host: ^Host, in_bandwidth: u32, out_bandwidth: u32)                                                                #link_name "enet_host_bandwidth_limit" ---;
+
+	peer_send                      :: proc(peer: ^Peer, channel_id: u8, packet: ^Packet) -> int                                                               #link_name "enet_peer_send" ---;
+	peer_receive                   :: proc(peer: ^Peer, channel_id: ^u8) -> ^Packet                                                                           #link_name "enet_peer_receive" ---;
+	peer_ping                      :: proc(peer: ^Peer)                                                                                                       #link_name "enet_peer_ping" ---;
+	peer_ping_interval             :: proc(peer: ^Peer, ping_interval: u32)                                                                                   #link_name "enet_peer_ping_interval" ---;
+	peer_timeout                   :: proc(peer: ^Peer, timeout_limit: u32, timeout_minimum: u32, timeout_maximum: u32)                                       #link_name "enet_peer_timeout" ---;
+	peer_reset                     :: proc(peer: ^Peer)                                                                                                       #link_name "enet_peer_reset" ---;
+	peer_disconnect                :: proc(peer: ^Peer, data: u32)                                                                                            #link_name "enet_peer_disconnect" ---;
+	peer_disconnect_now            :: proc(peer: ^Peer, data: u32)                                                                                            #link_name "enet_peer_disconnect_now" ---;
+	peer_disconnect_later          :: proc(peer: ^Peer, data: u32)                                                                                            #link_name "enet_peer_disconnect_later" ---;
+	peer_throttle_configure        :: proc(peer: ^Peer, interval: u32, acceleration: u32, deceleration: u32)                                                  #link_name "enet_peer_throttle_configure" ---;
+}
+
+
 Socket_Type :: enum i32 {
 	Stream   = 1,
 	Datagram = 2,
@@ -246,64 +306,6 @@ Callbacks :: struct #ordered {
 	malloc: #type proc(size: u32) #cc_c,
 	free: #type proc(memory: rawptr) #cc_c,
 	no_memory: #type proc() #cc_c,
-}
-
-foreign enet32 {
-	initialize                     :: proc() -> i32                                                                                                           #link_name "enet_initialize" ---;
-	initialize_with_callbacks      :: proc(version: u32, inits: ^Callbacks)                                                                                   #link_name "enet_initialize_with_callbacks" ---;
-	deinitialize                   :: proc()                                                                                                                  #link_name "enet_deinitialize" ---;
-	linked_version                 :: proc() -> u32                                                                                                           #link_name "enet_linked_version" ---;
-
-	time_get                       :: proc() -> u64                                                                                                           #link_name "enet_time_get" ---;
-	time_set                       :: proc(time: u64)                                                                                                         #link_name "enet_time_set" ---;
-
-	socket_create                  :: proc(sock_type: Socket_Type) -> Socket                                                                                   #link_name "enet_socket_create" ---;
-	socket_bind                    :: proc(socket: Socket, address: ^Address) -> int                                                                          #link_name "enet_socket_bind" ---;
-	socket_get_address             :: proc(socket: Socket, address: ^Address) -> int                                                                          #link_name "enet_socket_get_address" ---;
-	socket_listen                  :: proc(socket: Socket, arg1: int) -> int                                                                                  #link_name "enet_socket_listen" ---;
-	socket_accept                  :: proc(socket: Socket, address: ^Address) -> Socket                                                                       #link_name "enet_socket_accept" ---;
-	socket_connect                 :: proc(socket: Socket, address: ^Address) -> int                                                                          #link_name "enet_socket_connect" ---;
-	socket_send                    :: proc(socket: Socket, address: ^Address, buffer: ^Buffer, buffer_count: uint) -> int                                      #link_name "enet_socket_send" ---;
-	socket_receive                 :: proc(socket: Socket, address: ^Address, buffer: ^Buffer, buffer_count: uint) -> int                                      #link_name "enet_socket_receive" ---;
-	socket_wait                    :: proc(socket: Socket, arg1: ^u32, arg2: u64) -> int                                                                      #link_name "enet_socket_wait" ---;
-	socket_set_option              :: proc(socket: Socket, option: Socket_Option, arg2: int) -> int                                                           #link_name "enet_socket_set_option" ---;
-	socket_get_option              :: proc(socket: Socket, option: Socket_Option, arg2: int) -> int                                                           #link_name "enet_socket_get_option" ---;
-	socket_shutdown                :: proc(socket: Socket, shutdown: Socket_Shutdown) -> int                                                                  #link_name "enet_socket_shutdown" ---;
-	socket_destroy                 :: proc(socket: Socket)                                                                                                    #link_name "enet_socket_destroy" ---;
-	socketset_select               :: proc(socket: Socket, sock_set: ^Socket_Set, sock_set2: ^Socket_Set, arg3: u32) -> int                                   #link_name "enet_socketset_select" ---;
-
-	address_set_host_ip            :: proc(address: ^Address, host_name: ^u8) -> i32                                                                          #link_name "enet_address_set_host_ip" ---;
-	address_set_host               :: proc(address: ^Address, host_name: ^u8) -> i32                                                                          #link_name "enet_address_set_host" ---;
-	address_get_host_ip            :: proc(address: ^Address, host_name: ^u8, name_length: uint) -> i32                                                        #link_name "enet_address_get_host_ip" ---;
-	address_get_host               :: proc(address: ^Address, host_name: ^u8, name_length: uint) -> i32                                                        #link_name "enet_address_get_host" ---;
-
-	packet_create                  :: proc(data: rawptr, data_length: uint, flags: Packet_Flag) -> ^Packet                                                     #link_name "enet_packet_create" ---;
-	packet_destroy                 :: proc(packet: ^Packet)                                                                                                   #link_name "enet_packet_destroy" ---;
-	packet_resize                  :: proc(packet: ^Packet, data_length: uint) -> int                                                                          #link_name "enet_packet_resize" ---;
-	crc32                          :: proc(buffer: ^Buffer, buffer_count: uint) -> u32                                                                         #link_name "enet_crc32" ---;
-
-	host_create                    :: proc(address: ^Address, max_conn: uint, max_chan: uint, expected_in_bandwidth: u32, expected_out_bandwidth: u32) -> ^Host #link_name "enet_host_create" ---;
-	host_destroy                   :: proc(host: ^Host)                                                                                                       #link_name "enet_host_destroy" ---;
-	host_connect                   :: proc(host: ^Host, address: ^Address, chan_count: uint, data: u32) -> ^Peer                                               #link_name "enet_host_connect" ---;
-	host_check_events              :: proc(host: ^Host, event: ^Event) -> int                                                                                 #link_name "enet_host_check_events" ---;
-	host_service                   :: proc(host: ^Host, event: ^Event, timeout: u32) -> int                                                                   #link_name "enet_host_service" ---;
-	host_flush                     :: proc(host: ^Host)                                                                                                       #link_name "enet_host_flush" ---;
-	host_broadcast                 :: proc(host: ^Host, chan_id: u8, packet: ^Packet)                                                                         #link_name "enet_host_broadcast" ---;
-	host_compress                  :: proc(host: ^Host, compressor: ^Compressor)                                                                              #link_name "enet_host_compress" ---;
-	host_compress_with_range_coder :: proc(host: ^Host) -> int                                                                                                #link_name "enet_host_compress_with_range_coder" ---;
-	host_channel_limit             :: proc(host: ^Host, chan_limit: uint)                                                                                      #link_name "enet_host_channel_limit" ---;
-	host_bandwidth_limit           :: proc(host: ^Host, in_bandwidth: u32, out_bandwidth: u32)                                                                #link_name "enet_host_bandwidth_limit" ---;
-
-	peer_send                      :: proc(peer: ^Peer, channel_id: u8, packet: ^Packet) -> int                                                               #link_name "enet_peer_send" ---;
-	peer_receive                   :: proc(peer: ^Peer, channel_id: ^u8) -> ^Packet                                                                           #link_name "enet_peer_receive" ---;
-	peer_ping                      :: proc(peer: ^Peer)                                                                                                       #link_name "enet_peer_ping" ---;
-	peer_ping_interval             :: proc(peer: ^Peer, ping_interval: u32)                                                                                   #link_name "enet_peer_ping_interval" ---;
-	peer_timeout                   :: proc(peer: ^Peer, timeout_limit: u32, timeout_minimum: u32, timeout_maximum: u32)                                       #link_name "enet_peer_timeout" ---;
-	peer_reset                     :: proc(peer: ^Peer)                                                                                                       #link_name "enet_peer_reset" ---;
-	peer_disconnect                :: proc(peer: ^Peer, data: u32)                                                                                            #link_name "enet_peer_disconnect" ---;
-	peer_disconnect_now            :: proc(peer: ^Peer, data: u32)                                                                                            #link_name "enet_peer_disconnect_now" ---;
-	peer_disconnect_later          :: proc(peer: ^Peer, data: u32)                                                                                            #link_name "enet_peer_disconnect_later" ---;
-	peer_throttle_configure        :: proc(peer: ^Peer, interval: u32, acceleration: u32, deceleration: u32)                                                  #link_name "enet_peer_throttle_configure" ---;
 }
 
 Packet_Free_Callback :: #type proc(packet: ^Packet) #cc_c;
