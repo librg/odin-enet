@@ -13,7 +13,7 @@ main :: proc() {
 	address.host = HOST_ANY;
 	address.port = 27010;
 
-	server = host_create(&address, 32, 2, 0, 0);
+	server = host_create(&address, 32, 4, 0, 0);
 
 	if server == nil {
 		fmt.println("Couldn't create socket!");

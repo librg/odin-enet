@@ -88,6 +88,7 @@ Protocol_Send_Unsequenced :: struct #packed {
 
 Protocol_Send_Fragment :: struct #packed {
 	header: Protocol_Command_Header,
+	start_seq_number: u16,
 	data_length: u16,
 	fragment_count: u32,
 	fragment_number: u32,
@@ -95,7 +96,7 @@ Protocol_Send_Fragment :: struct #packed {
 	fragment_offset: u32,
 }
 
-Protocol :: struct #packed {
+Protocol :: struct #raw_union {
 	header: Protocol_Command_Header,
 	acknowledge: Protocol_Acknowledge,
 	connect: Protocol_Connect,
@@ -118,4 +119,4 @@ PROTOCOL_MAXIMUM_WINDOW_SIZE     :: 65536;
 PROTOCOL_MINIMUM_CHANNEL_COUNT   :: 1;
 PROTOCOL_MAXIMUM_CHANNEL_COUNT   :: 255;
 PROTOCOL_MAXIMUM_PEER_ID         :: 0xFFF;
-PROTOCOL_MAXIMUM_FRAGMENT_COUNT  :: 1024 * 102;
+PROTOCOL_MAXIMUM_FRAGMENT_COUNT  :: 1024 * 1024;
