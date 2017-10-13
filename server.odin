@@ -22,7 +22,7 @@ main :: proc() {
 
 	loop: for true {
 		for host_service(server, &event, 1000) > 0 {
-			match event.event_type {
+			switch event.event_type {
 				case Event_Type.Connect:
 					fmt.println("Incoming connection!");
 
