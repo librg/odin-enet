@@ -1,7 +1,7 @@
 when ODIN_OS == "windows" {
 	import "core:sys/windows.odin";
-	foreign_library ws2 "system:Ws2_32.lib";
-	foreign_library enet32 "enet.lib";
+	foreign import ws2 "system:Ws2_32.lib";
+	foreign import enet32 "enet.lib";
 }
 
 using import "enet/list.odin";
