@@ -2,14 +2,16 @@
 
 Odin bindings for ENet networking library.
 
+Bindings are written for our ENet fork, which contains QoL patches and enhancements. Backward compatibility with the upstream version is not guaranteed.
+
 ## Dependencies
 
-* ENet static library (preferably [zpl-c version](https://github.com/zpl-c/enet)).
+* zpl-c/enet static library [GitHub link](https://github.com/zpl-c/enet) (Version **1.4.3**).
 
 ## Things to note
 
 * Currently works only on Windows.
-* Some methods lack argument names due to ENet's API design.
+* Some methods lack argument names due to the ENet's API design.
 
 ## License
 

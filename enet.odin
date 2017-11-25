@@ -1,6 +1,5 @@
 when ODIN_OS == "windows" {
 	import "core:sys/windows.odin";
-	foreign import ws2 "system:Ws2_32.lib";
 	foreign import enet32 "enet.lib";
 }
 
@@ -88,6 +87,9 @@ foreign enet32 {
 
 	@(link_name="enet_packet_create")
 	packet_create                  :: proc(data: rawptr, data_length: uint, flags: Packet_Flag) -> ^Packet ---;
+
+	@(link_name="enet_packet_create_offset")
+	packet_create_offset           :: proc(data: rawptr, data_length, data_offset: uint, flags: Packet_Flag) -> ^Packet ---;
 
 	@(link_name="enet_packet_destroy")
 	packet_destroy                 :: proc(packet: ^Packet) ---;
