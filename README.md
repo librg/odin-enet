@@ -4,7 +4,7 @@ Odin bindings for ENet networking library.
 
 Bindings are written for our ENet fork, which contains QoL patches and enhancements. Backward compatibility with the upstream version is not guaranteed.
 
-**NOTE:** This repo's is out-of-date and requires updating to the latest Odin's version. However, due to my time constraint, I am not able to perform such an action. If you're willing to update it, I'd be happy to assist and accept any changes.
+**NOTE:** This repo is out-of-date and requires updating to the latest Odin's version. However, due to my time constraint, I am not able to perform such an action. If you're willing to update it, I'd be happy to assist and accept any changes.
 
 ## Dependencies
 
